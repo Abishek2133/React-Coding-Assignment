@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dynamic Form with Validation</title>
+  <style>
+    .error {
+      color: red;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dynamic Form with Validation</h1>
+
+  <form id="myForm">
+    <div id="fields">
+      <!-- Initial input field -->
+      <div>
+        <input type="text" name="field[]" required>
+        <button type="button" onclick="addField()">Add Field</button>
+      </div>
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    function addField() {
+      const fieldsContainer = document.getElementById('fields');
+      const newField = document.createElement('div');
+      newField.innerHTML = `<input type="text" name="field[]" required>
+                            <button type="button" onclick="removeField(this)">Remove</button>`;
+      fieldsContainer.appendChild(newField);
+    }
+
+    function removeField(field) {
+      const fieldsContainer = document.getElementById('fields');
+      fieldsContainer.removeChild(field.parentNode);
+    }
+
+    const form = document.getElementById('myForm');
+
+    form.addEventListener('submit', function(event) {
+      const inputs = form.querySelectorAll('input[name="field[]"]');
+      let isValid = true;
+
+      inputs.forEach(input => {
+        if (!input.value) {
+          isValid = false;
+          input.classList.add('error');
+          input.insertAdjacentHTML('afterend', '<span class="error">Field is required</span>');
+        } else {
+          input.classList.remove('error');
+          const errorSpan = input.nextElementSibling;
+          if (errorSpan && errorSpan.classList.contains('error')) {
+            errorSpan.remove();
+          }
+        }
+      });
+
+      if (!isValid) {
+        event.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Dynamic Chart Example</title>
+ <!-- Include Chart.js library -->
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+ <div>
+ <label for="chartType">Select Chart Type:</label>
+ <select id="chartType">
+ <option value="line">Line Chart</option>
+ <option value="bar">Bar Chart</option>
+ <!-- Add more chart types as needed -->
+ </select>
+ </div>
+ <div>
+ <label for="dataInput">Enter Data (comma-separated values):</label>
+ <input type="text" id="dataInput" placeholder="e.g., 10, 20, 30">
+ </div>
+ <button onclick="updateChart()">Update Chart</button>
+ <div>
+ <canvas id="myChart" width="400" height="200"></canvas>
+ </div>
+ <script>
+ // Initial data for the chart
+ let chartData = [10, 20, 30];
+ // Initial chart configuration
+ const initialChartConfig = {
+ type: 'line', // Default chart type
+ data: {
+ labels: Array.from({ length: chartData.length }, (_, i) => i + 1),
+ datasets: [{
+ label: 'Dynamic Chart',
+ data: chartData,
+ borderColor: 'blue',
+ borderWidth: 2,
+ fill: false,
+ }],
+ },
+ };
+ // Create a chart with the initial configuration
+ const ctx = document.getElementById('myChart').getContext('2d');
+ let myChart = new Chart(ctx, initialChartConfig);
+ // Function to update the chart based on user input
+ function updateChart() {
+ const chartType = document.getElementById('chartType').value;
+ const dataInput = document.getElementById('dataInput').value;
+ // Parse user input into an array of numbers
+ const newData = dataInput.split(',').map(Number);
+ // Update chart type
+ myChart.config.type = chartType;
+ // Update chart data
+ myChart.config.data.labels = Array.from({ length: newData.length }, (_, i) => i + 1);
+ myChart.config.data.datasets[0].data = newData;
+ // Update the chart
+ myChart.update();
+ }
+ </script>
+</body>
+</html>
