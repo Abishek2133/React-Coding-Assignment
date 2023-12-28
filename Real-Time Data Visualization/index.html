@@ -1,0 +1,71 @@
+<!-- HTML -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Real-time Data Visualization</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <canvas id="myChart" width="400" height="400"></canvas>
+
+  <script>
+    // Get the canvas context
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    // Create a Chart instance
+    const myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [], // Initial empty labels
+        datasets: [{
+          label: 'Real-time Data',
+          data: [], // Initial empty data
+          borderColor: 'blue',
+          borderWidth: 1,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [{
+            type: 'time',
+            time: {
+              unit: 'second',
+              displayFormats: {
+                second: 'h:mm:ss a'
+              }
+            },
+            ticks: {
+              autoSkip: true,
+              maxTicksLimit: 10
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+
+    // Fetch data from the API
+    function fetchData() {
+      fetch('YOUR_API_ENDPOINT')
+        .then(response => response.json())
+        .then(data => {
+          const timestamp = new Date().toLocaleTimeString(); // Get current time
+          myChart.data.labels.push(timestamp); // Add timestamp to labels
+          myChart.data.datasets[0].data.push(data.value); // Update data
+          myChart.update(); // Update the chart
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+
+    // Fetch new data every 2 seconds (adjust the interval as needed)
+    setInterval(fetchData, 2000);
+  </script>
+</body>
+</html>

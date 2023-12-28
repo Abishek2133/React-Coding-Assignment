@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client-side Pagination</title>
+</head>
+<body>
+    <h1>Client-side Pagination</h1>
+    
+    <div id = "pagination"></div>
+    <ul id = "items"></ul>
+
+    <script>
+        const itemsPerPage = 20;
+        const items = Array.from({ length: 1000 }, (_, i) => `Item ${i + 1}`);
+
+        const pagination = document.getElementById('pagination');
+        const itemsList = document.getElementById('items');
+
+        let currentPage = 1;
+
+        function displayItems(page) {
+            itemsList.innerHTML = '';
+            const startIndex = (page - 1)*itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedItems = items.slice(startIndex, endIndex);
+
+            paginatedItems.forEach(item =>{
+                const li = document.createElement('li');
+                li.textContent = item;
+                itemsList.appendChild(li)
+            });
+
+            const totalPages = Math.ceil(items.length / itemsPerPage);
+            const buttons = Array.from({length: totalPages }, (_,i) =>{
+                const btn = document.createElement('button');
+                btn.textContent = i + 1;
+                btn.onclick = () => {
+                    currentPage = i + 1;
+                    displayItems(currentPage);
+                };
+                return btn;
+            });
+
+            pagination.innerHTML = '';
+            buttons.forEach(btn => pagination.appendChild(btn));
+        }
+
+        displayItems(currentPage);
+    </script>
+    
+</body>
+</html>

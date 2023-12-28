@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebSocket Notifications</title>
+</head>
+<body>
+  <div id="notifications"></div>
+
+  <script>
+    const ws = new WebSocket('ws://localhost:8080');
+
+    // Event listener for incoming messages from the server
+    ws.onmessage = function(event) {
+      const notificationsDiv = document.getElementById('notifications');
+      notificationsDiv.innerHTML += `<p>${event.data}</p>`;
+    };
+
+    // Handle errors
+    ws.onerror = function(error) {
+      console.error('WebSocket error:', error);
+    };
+  </script>
+</body>
+</html>
