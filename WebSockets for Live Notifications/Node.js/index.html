@@ -1,0 +1,35 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebSocket Notifications</title>
+</head>
+<body>
+  <input type="text" id="messageInput" placeholder="Type a message">
+  <button onclick="sendMessage()">Send</button>
+  <div id="notifications"></div>
+
+  <script>
+    const ws = new WebSocket('ws://localhost:8080');
+
+    ws.onmessage = function(event) {
+      const notificationsDiv = document.getElementById('notifications');
+      notificationsDiv.innerHTML += `<p>New notification: ${event.data}</p>`;
+    };
+
+    function sendMessage() {
+      const messageInput = document.getElementById('messageInput');
+      const message = messageInput.value;
+
+      if (message.trim() !== '') {
+        ws.send(message);
+        messageInput.value = '';
+      }
+    }
+
+    ws.onerror = function(error) {
+      console.error('WebSocket error:', error);
+    };
+  </script>
+</body>
+</html>
